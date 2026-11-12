@@ -1,4 +1,6 @@
+
 name: Build MobStacker
+
 on:
   workflow_dispatch:
   push:
@@ -9,16 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Extract source ZIP
+        run: unzip -o MobStacker-source-alpha.zip -d .
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
+
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.14.3'
-      - name: Build remapped mod jar
-        run: gradle build
+
+      - name: Build MobStacker
+        run: gradle -p MobStacker build
+
       - uses: actions/upload-artifact@v4
         with:
           name: MobStacker-alpha-jars
-          path: build/libs/*.jar
+          path: MobStacker/build/libs/*.jar
+          if-no-files-found: error
